@@ -1,41 +1,43 @@
-repositories {
-    mavenCentral()
-//    jcenter()
+plugins {
+    id "com.gradle.plugin-publish" version "0.9.6"
 }
-
-buildscript {
-    repositories {
-        mavenLocal()
-    }
-
-    dependencies {
-        classpath "me.taku_k.gradle.yarn:gradle-yarn-plugin:1.0-SNAPSHOT"
-    }
-}
-
-apply plugin: 'me.taku_k.yarn'
 
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: "maven"
 apply plugin: 'java'
 
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+    compile 'org.projectlombok:lombok:1.16.0'
+    compile 'org.apache.httpcomponents:httpclient:4.5.2'
+
+    testCompile 'com.netflix.nebula:nebula-test:latest.release'
+
+    compile 'org.codehaus.groovy:groovy:2.4.7'
+}
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 group = 'me.taku_k.gradle.yarn'
-version = '1.0-SNAPSHOT'
+version = '0.1.1'
 
-dependencies {
-    compile gradleApi()
+pluginBundle {
+    website = 'https://github.com/taku-k/gradle-yarn-plugin'
+    vcsUrl = 'https://github.com/taku-k/gradle-yarn-plugin'
+    description = 'A Gradle Plugin for Yarn'
+    tags = ['gradle', 'yarn', 'npm']
 
-    testCompile 'com.netflix.nebula:nebula-test:latest.release'
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file:${System.getProperty('user.home')}/.m2/repository")
+    plugins {
+        yarn {
+            id = 'me.taku_k.yarn'
+            displayName = 'Gradle for Yarn'
         }
     }
 }
