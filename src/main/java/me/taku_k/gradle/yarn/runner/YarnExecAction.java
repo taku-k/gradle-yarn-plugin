@@ -1,21 +1,25 @@
 package me.taku_k.gradle.yarn.runner;
 
+import me.taku_k.gradle.yarn.YarnExtension;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.process.ExecSpec;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class YarnExecAction implements Action<ExecSpec> {
-    private final Project project;
+    private final YarnExtension ext;
 
-    public YarnExecAction(Project project) {
-        this.project = project;
+    private final List<String> args;
+
+    public YarnExecAction(Project project, List<String> args) {
+        this.args = args;
+        this.ext = (YarnExtension) project.getExtensions().getByName(YarnExtension.NAME);
     }
 
     @Override
     public void execute(ExecSpec execSpec) {
-        execSpec.setExecutable(".gradle/yarn/yarn-0.17.4.js");
-        execSpec.setArgs(Arrays.asList("--version"));
+        execSpec.setExecutable(ext.getBinPath());
+        execSpec.setArgs(args);
     }
 }
