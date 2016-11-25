@@ -1,5 +1,8 @@
 # Gradle Plugin for Yarn :package::cat2:
 
+[![Build Status](https://travis-ci.org/taku-k/gradle-yarn-plugin.svg?branch=master)](https://travis-ci.org/taku-k/gradle-yarn-plugin)
+[![Coverage Status](https://coveralls.io/repos/github/taku-k/gradle-yarn-plugin/badge.svg)](https://coveralls.io/github/taku-k/gradle-yarn-plugin)
+
 You can run any [Yarn](https://yarnpkg.com) commands in your gradle scripts by using this plugin.
 This plugin downloads any version of [Yarn](https://yarnpkg.com)
 into your `.gradle` directory and you can use them from there.
