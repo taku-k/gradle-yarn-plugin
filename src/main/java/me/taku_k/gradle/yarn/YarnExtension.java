@@ -2,6 +2,9 @@ package me.taku_k.gradle.yarn;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.gradle.api.Project;
+
+import static java.lang.String.format;
 
 public class YarnExtension {
     public static final String NAME = "yarn";
@@ -14,11 +17,15 @@ public class YarnExtension {
     @Setter
     private String workingDir = "yarn";
 
+    @Getter
+    @Setter
+    private Project project;
+
     public String getBinPath() {
         if ("".equals(version)) {
             return "yarn";
         }
-        return String.format(".gradle/%s/yarn-%s.js", workingDir, version);
+        return format("%s/.gradle/%s/yarn-%s.js", project.getRootDir(), workingDir, version);
     }
 
     public boolean isSpecifiedVersion() {

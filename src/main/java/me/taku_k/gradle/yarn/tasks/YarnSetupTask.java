@@ -25,6 +25,40 @@ public class YarnSetupTask extends DefaultTask {
         setDescription("Setup a specific version of yarn to be used by the build.");
     }
 
+    public void getYarnBin(String url, OutputStream out) {
+        try {
+            HttpEntity entity = requestDownloadYarn(url);
+            if (entity != null) {
+                entity.writeTo(out);
+            }
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TaskAction
+    public void setup() {
+        YarnExtension ext = (YarnExtension) getProject().getExtensions().getByName(YarnExtension.NAME);
+        // yarn is setup when version is specified
+        if (ext.isSpecifiedVersion()) {
+            String versionedUrl = ext.getVersion();
+            String url = buildUrl(versionedUrl);
+            try {
+                // download yarn script to ext.getBinPath()
+                File binFile = new File(ext.getBinPath());
+                binFile.getParentFile().mkdirs();
+                binFile.createNewFile();
+                FileOutputStream fos = new FileOutputStream(binFile, false);
+                getYarnBin(url, fos);
+                // set the execute permission for yarn script
+                new File(ext.getBinPath()).setExecutable(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private String buildUrl(String version) {
         return String.format(YARN_BASE, version, version);
     }
@@ -57,34 +91,4 @@ public class YarnSetupTask extends DefaultTask {
         return response.getEntity();
     }
 
-    public void getYarnBin(String url, OutputStream out) {
-        try {
-            HttpEntity entity = requestDownloadYarn(url);
-            if (entity != null) {
-                entity.writeTo(out);
-            }
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @TaskAction
-    public void setup() {
-        YarnExtension ext = (YarnExtension) getProject().getExtensions().getByName(YarnExtension.NAME);
-        // yarn is setup when version is specified
-        if (ext.isSpecifiedVersion()) {
-            String version = ext.getVersion();
-            String url = buildUrl(version);
-            try {
-                // download yarn script to ext.getBinPath()
-                FileOutputStream fos = new FileOutputStream(ext.getBinPath());
-                getYarnBin(url, fos);
-                // set the execute permission for yarn script
-                new File(ext.getBinPath()).setExecutable(true);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

@@ -12,6 +12,8 @@ public class YarnPlugin implements Plugin<Project> {
     public void apply(Project project) {
         this.project = project;
         this.project.getExtensions().add(YarnExtension.NAME, YarnExtension.class);
+        YarnExtension yarnExtension = (YarnExtension) this.project.getExtensions().findByName(YarnExtension.NAME);
+        yarnExtension.setProject(this.project);
         addTasks();
     }
 
