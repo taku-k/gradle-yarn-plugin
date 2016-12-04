@@ -2,6 +2,8 @@ package me.taku_k.gradle.yarn.tasks;
 
 import me.taku_k.gradle.yarn.YarnExtension;
 import org.apache.http.*;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -65,6 +67,10 @@ public class YarnSetupTask extends DefaultTask {
 
     private HttpEntity requestDownloadYarn(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.STANDARD)
+                .build();
+        httpGet.setConfig(requestConfig);
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader("Content-Type", "application/octet-stream"));
         CloseableHttpClient httpClient = HttpClientBuilder.create()
